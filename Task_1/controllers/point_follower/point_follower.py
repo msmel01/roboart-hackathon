@@ -47,11 +47,14 @@ robot = Robot()
 timestep = int(robot.getBasicTimeStep()) # Defined timestep (in msec) to enable sensors and define sensor frequency.
 
 # Initialize and Enable GPS object to get X,Y location of robot
-gps = robot.getGPS("gps")
+# gps = robot.getGPS("gps")
+gps = robot.getDevice("gps")
 gps.enable(timestep) # x, y, z location received at time difference equat to timestep.
 
 # Initialize and Enable IMU object to get theta (orientation) of robot
-imu = robot.getInertialUnit("imu")
+# imu = robot.getInertialUnit("imu")
+imu = robot.getDevice("imu")
+
 imu.enable(timestep) # Theta recieved at time difference equat to timestep.
 
 
@@ -59,7 +62,8 @@ imu.enable(timestep) # Theta recieved at time difference equat to timestep.
 wheels_names = ["wheel1", "wheel2", "wheel3", "wheel4"]
 wheels = []
 for i in range(4):
-    wheels.append(robot.getMotor(wheels_names[i]))
+    wheels.append(robot.getDevice(wheels_names[i]))
+    # wheels.append(robot.getMotor(wheels_names[i]))
     wheels[-1].setPosition(float('inf')) # setting max position limit of each wheel to infinity to convert it to velocity mode 
     wheels[-1].setVelocity(0.0) # Setting zero velocity for all the wheels.
 
