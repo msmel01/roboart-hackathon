@@ -11,32 +11,21 @@ import sympy as sym
 ## ------------------------------------------------------------------------
 #Edit point_follower and Sketch functions for Task 1, 2 , 3
 
+INC = 0.1
+
 def sin_trajectory_func(x):
     # Model is Asin(Bx)
     amp = 9.9 / 2
     phase = 2 * np.pi / 9.9
-    
     return amp * np.sin(phase * x)
    
     
 def sin_derivative(x):
     phase = 2 * np.pi / 9.9
-    
     return np.pi * np.cos(phase * x)
 
 
-def calculate_angle_at(x, y):
-    # pivot_x = -9.9 / 2
-    # pivot_y = 0
-    
-    # delta_x = pivot_x - x
-    # delta_y = pivot_y - y
-    
-    # print(delta_x)
-    # print(delta_y)
-    
-    # return math.atan2(delta_y, delta_x)
-    # tangent line at that point
+def calculate_angle_at(x, y): 
     return np.arctan(sin_derivative(x))
     
     
@@ -56,30 +45,33 @@ def point_follower(current,goal):
         
     # is_neg_angle = True if goal_angle < 0 else False
     
-    print(current_angle)
-    print(error)
-    print('--------------')
+    # print(current_angle)
+    # print(error)
+    # print('--------------')
+    
+    # Counter-clockwise = left negative, right positive
+    # Clockwise = left positive, right negative
     if np.abs(error) > error_threshold:
-        return 0.5, -0.5
-        # if is_neg_angle:
-            # print('Neg')
-             # left is positive, right is negative
-            # return 0.5, -0.5
-        # else:
-            # print('Pos')
-         # return -0.5, 0.5
-
+        if is_neg_angle:
+            return -0.1, 0.1, False, False
+        else:
+            return 0.1, -0.1, False, False
+    
     error_dist = np.sum(np.square(np.subtract(current[:2], goal[:2])))
+    
     is_neg_dist = True if current[0] > goal[0] else False
     
-    # if error > error_threshold:
-        # Do stuff 
-        # return left_speed, right_speed
+    if error_dist > 0.01:
+        if is_neg_dist:
+            
+            return INC/2, -INC/2, False, True
+        else:
+            return -INC/2, -INC/2, False, False
         
-    left_speed = 1.0 
-    right_speed = 1.0
+    left_speed = -INC/4
+    right_speed = -INC/4
     # Sample velocities of 1.0 provided to make robot move straight by default. 
-    return left_speed, right_speed
+    return left_speed, right_speed, True, False
 
 
 def Sketch():
@@ -97,7 +89,7 @@ def Sketch():
     Therefore the model is 4.95sin(0.634x)
     '''
 
-    delta = 0.1
+    delta = 0.05 # decrease does better
     x = np.arange(-9.9/2+delta, 9.9/2, delta)
     y = [sin_trajectory_func(pnt) for pnt in x]    
     angle = [calculate_angle_at(x,y) for x, y in zip(x, y)]
@@ -109,7 +101,6 @@ def Sketch():
     # plt.xlim(-9.9/2, -9.9/2+1)
     # plt.show()
     waypoints = list(zip(x, y, angle))
-    print(angle[0])
     
     return waypoints
 
@@ -142,23 +133,38 @@ if __name__=="__main__":
     #Call the Sketch function here if you want to generate vector of goals just once
     # ------------------------------------------------------------------------------
     waypoints = Sketch()
+    idx = 0
     
-    while robot.step(timestep) != -1:
-
+    while robot.step(timestep) != -1 and idx < len(waypoints):
+        
+        goal = waypoints[idx]
         # Fetch current position of robot using GPS and IMU : x,y,theta
         current = [gps.getValues()[0],gps.getValues()[1],imu.getRollPitchYaw()[2]]    
         # print("current x, y, theta of robot: ",current)
         
         #comment this default goal location if you caculate your own set of goals vector 
-        goal = waypoints[0] # initial goal to initialize goal array
+        # goal = waypoints[0] # initial goal to initialize goal array
 
         ## ------------------------------------------------------------------------------
         #Edit here 
         # Call the Sketch function here if you want to generate vector of goals continuously
         # Use point_follower controller to trace the curve using the above generated waypoints   
         # point_follower should return leftSpeed and rightSpeed 
-        leftSpeed, rightSpeed = point_follower(current, goal)
+        leftSpeed, rightSpeed, isAligned, isStuck = point_follower(current, goal)
         ## ------------------------------------------------------------------------------
+        
+        if isAligned:
+            print('Aligned')
+            idx += 1
+            
+            print('Next target point is {}'.format(goal))
+            
+        if isStuck:
+            print('Im stuck')
+            idx += 1
+            
+            print('Next target point is {}'.format(goal))
+
         
         # Align angles first
         
