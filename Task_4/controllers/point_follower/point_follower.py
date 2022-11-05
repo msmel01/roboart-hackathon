@@ -79,6 +79,7 @@ keyboard.enable(timestep)
 
 # Initialize and Enable GPS object to get X,Y location of robot
 gps = robot.getGPS("gps")
+# gps = robot.getGPS("gps2")
 gps.enable(timestep) # x, y, z location received at time difference equat to timestep.
 
 # Initialize and Enable IMU object to get theta (orientation) of robot

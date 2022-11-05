@@ -37,10 +37,12 @@ display.imagePaste( background, 0, 0) # Adding background to the display node to
 # // set the pen to remove the texture
 display.setAlpha(1.0)
 display.setColor(16711680)
-
+# display.setColor(255)
 draw = True # Flag to enable and disable drawing.
 
 while super.step(TIME_STEP) != -1:
+
+  display.drawPolygon([3, -3, 3, -3], [3, 3, -3, -3])
 
   # get currently pressed key on the keyboard.    
   key=keyboard.getKey()
