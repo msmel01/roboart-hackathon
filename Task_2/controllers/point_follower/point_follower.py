@@ -5,6 +5,8 @@ from controller import Robot
 from controller import GPS , Motor , InertialUnit
 import math
 import numpy as np
+import matplotlib.pyplot as plt
+import sympy as sym
 
 ## ------------------------------------------------------------------------
 #Edit point_follower and Sketch functions for Task 1, 2 , 3
@@ -15,16 +17,27 @@ def sin_trajectory_func(x):
     phase = 2 * np.pi / 9.9
     
     return amp * np.sin(phase * x)
+   
     
+def sin_derivative(x):
+    phase = 2 * np.pi / 9.9
+    
+    return np.pi * np.cos(phase * x)
+
 
 def calculate_angle_at(x, y):
-    pivot_x = -9.9 / 2
-    pivot_y = 0
+    # pivot_x = -9.9 / 2
+    # pivot_y = 0
     
-    delta_x = pivot_x - x
-    delta_y = pivot_y - y
+    # delta_x = pivot_x - x
+    # delta_y = pivot_y - y
     
-    return math.atan2(delta_y, delta_x)
+    # print(delta_x)
+    # print(delta_y)
+    
+    # return math.atan2(delta_y, delta_x)
+    # tangent line at that point
+    return np.arctan(sin_derivative(x))
     
     
 def point_follower(current,goal):
@@ -34,18 +47,34 @@ def point_follower(current,goal):
     current_angle = current[2]
     goal_angle = goal[2]
     error = np.abs(goal_angle - current_angle)
-    is_neg_angle = True if goal_angle < 0 else False
+    # error = math.atan2((current[1]-goal[1]),(current[0]-goal[0]))
     
-    if error > error_threshold:
-        # Do stuff
-        return left_speed, right_speed
+    if goal_angle < 0:
+        is_neg_angle = True
+    else:
+        is_neg_angle = False
+        
+    # is_neg_angle = True if goal_angle < 0 else False
+    
+    print(current_angle)
+    print(error)
+    print('--------------')
+    if np.abs(error) > error_threshold:
+        return 0.5, -0.5
+        # if is_neg_angle:
+            # print('Neg')
+             # left is positive, right is negative
+            # return 0.5, -0.5
+        # else:
+            # print('Pos')
+         # return -0.5, 0.5
 
-    error_dist = np.sum(np.square(current[:2] - goal[:2]))
+    error_dist = np.sum(np.square(np.subtract(current[:2], goal[:2])))
     is_neg_dist = True if current[0] > goal[0] else False
     
-    if error > error_threshold:
+    # if error > error_threshold:
         # Do stuff 
-        return left_speed, right_speed
+        # return left_speed, right_speed
         
     left_speed = 1.0 
     right_speed = 1.0
@@ -69,12 +98,19 @@ def Sketch():
     '''
 
     delta = 0.1
-    x = np.arange(-9.9/2, 9.9/2, delta)
-    y = [sin_trajectory_func(pnt) for pnt in x]
+    x = np.arange(-9.9/2+delta, 9.9/2, delta)
+    y = [sin_trajectory_func(pnt) for pnt in x]    
     angle = [calculate_angle_at(x,y) for x, y in zip(x, y)]
-    
+    # exp = sym.expand(sin_trajectory_func)
+    # z = sym.symbols('z')
+    # angle = sym.diff(9.9 / 2 * sin(2 * 3.14 / 9.9 * z), z)
+    # print(sym.diff(sym(9.9) / sym(2) * sym.sin(sym(2) * sym('pi') / sym(9.9) * z), z))
+    # plt.plot(x, angle)
+    # plt.xlim(-9.9/2, -9.9/2+1)
+    # plt.show()
     waypoints = list(zip(x, y, angle))
-
+    print(angle[0])
+    
     return waypoints
 
 ## ------------------------------------------------------------------------
@@ -111,22 +147,24 @@ if __name__=="__main__":
 
         # Fetch current position of robot using GPS and IMU : x,y,theta
         current = [gps.getValues()[0],gps.getValues()[1],imu.getRollPitchYaw()[2]]    
-        print("current x, y, theta of robot: ",current)
+        # print("current x, y, theta of robot: ",current)
         
         #comment this default goal location if you caculate your own set of goals vector 
-        goal = [0,0,0] # initial goal to initialize goal array
+        goal = waypoints[0] # initial goal to initialize goal array
 
         ## ------------------------------------------------------------------------------
         #Edit here 
         # Call the Sketch function here if you want to generate vector of goals continuously
         # Use point_follower controller to trace the curve using the above generated waypoints   
         # point_follower should return leftSpeed and rightSpeed 
-        leftSpeed, rightSpeed, error = point_follower(current, goal)
+        leftSpeed, rightSpeed = point_follower(current, goal)
         ## ------------------------------------------------------------------------------
         
         # Align angles first
         
         # Align x, y coordinates 
+        # leftSpeed = 1
+        # rightSpeed = -1
         
         # Setting velocities to each wheel based on calculation.
         wheels[0].setVelocity(leftSpeed) # Front left wheel

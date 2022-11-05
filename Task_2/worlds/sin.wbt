@@ -13,7 +13,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.38400067833958146 0.41572749823090144 0.8244477704799846 1.8208553318683918
-  position 1.7871345004647028 -14.540612602649537 18.776258229176587
+  position -3.091765152045214 -17.007706386828303 22.767939504019292
   near 0.1
 }
 TexturedBackground {
@@ -29,8 +29,8 @@ CeilingLight {
   pointLightIntensity 6
 }
 DEF diff_robot Robot {
-  translation -4.9 0.0774321 0.039721
-  rotation 1.1307671648220746e-09 2.079022491720665e-09 0.9999999999999999 0
+  translation -2.877296712931533 -6.092803385906172 0.039720979298627716
+  rotation 6.023188975564785e-09 -4.367356253497319e-09 -1 1.254006976831002
   children [
     GPS {
     }
@@ -49,7 +49,7 @@ DEF diff_robot Robot {
     }
     DEF WHEEL1 HingeJoint {
       jointParameters HingeJointParameters {
-        position 5560.933513033018
+        position 5726.261507301791
         axis 0 1 0
         anchor 0.05 0.06 0
       }
@@ -60,7 +60,7 @@ DEF diff_robot Robot {
       ]
       endPoint Solid {
         translation 0.05 0.06 0
-        rotation -0.9757667074427786 -0.15472420104119858 0.1547247693759534 4.687856018076553
+        rotation -0.3091790642483026 -0.6724600300960284 0.6724625001840567 3.741303651646231
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
@@ -78,11 +78,13 @@ DEF diff_robot Robot {
         boundingObject USE WHEEL
         physics Physics {
         }
+        linearVelocity 0.012460691377599451 -0.038009619821137125 -4.2705427862867793e-10
+        angularVelocity 0.9502404847496654 0.3115172887421733 3.946432535782949e-09
       }
     }
     DEF WHEEL2 HingeJoint {
       jointParameters HingeJointParameters {
-        position 6028.491744396439
+        position 6187.835749032482
         axis 0 1 0
         anchor 0.05 -0.06 0
       }
@@ -93,7 +95,7 @@ DEF diff_robot Robot {
       ]
       endPoint Solid {
         translation 0.05 -0.06 0
-        rotation -0.0794764467292172 -0.7048687269323555 0.704871316062768 3.3002115539241252
+        rotation -0.7548946909841155 0.46375231835129715 -0.4637540218130663 4.434841837362323
         children [
           USE WHEEL
         ]
@@ -101,11 +103,13 @@ DEF diff_robot Robot {
         boundingObject USE WHEEL
         physics Physics {
         }
+        linearVelocity 0.012460691157398965 -0.0380096191412634 4.2726207486836943e-10
+        angularVelocity 0.9502404846748864 0.31151728878732055 4.1576715092254505e-09
       }
     }
     DEF WHEEL3 HingeJoint {
       jointParameters HingeJointParameters {
-        position 5561.155757042348
+        position 5726.483752375132
         axis 0 1 0
         anchor -0.05 0.06 0
       }
@@ -116,7 +120,7 @@ DEF diff_robot Robot {
       ]
       endPoint Solid {
         translation -0.05 0.06 0
-        rotation -0.9319920006062014 -0.25631077638318917 0.25631171786693024 4.64201242603907
+        rotation -0.22802316509734133 -0.6884772886452997 0.6884798175681021 3.5899711906295124
         children [
           USE WHEEL
         ]
@@ -124,11 +128,13 @@ DEF diff_robot Robot {
         boundingObject USE WHEEL
         physics Physics {
         }
+        linearVelocity 0.012460691943582774 -0.038009619635575476 -4.277616339717983e-10
+        angularVelocity 0.9502404847572821 0.3115172887189539 3.950444618091721e-09
       }
     }
     DEF WHEEL4 HingeJoint {
       jointParameters HingeJointParameters {
-        position 6028.684955510667
+        position 6188.02896124877
         axis 0 1 0
         anchor -0.05 -0.06 0
       }
@@ -139,7 +145,7 @@ DEF diff_robot Robot {
       ]
       endPoint Solid {
         translation -0.05 -0.06 0
-        rotation -0.011082989235204614 -0.7070620533585197 0.7070646505448042 3.1637576431439163
+        rotation -0.8228384824793855 0.4018305896374463 -0.401832065647634 4.518614129577164
         children [
           USE WHEEL
         ]
@@ -147,6 +153,8 @@ DEF diff_robot Robot {
         boundingObject USE WHEEL
         physics Physics {
         }
+        linearVelocity 0.012460691723390167 -0.038009618955695434 4.265534472594196e-10
+        angularVelocity 0.9502404846694308 0.3115172888039699 4.143131309559387e-09
       }
     }
     DEF DS_RIGHT DistanceSensor {
@@ -191,6 +199,8 @@ DEF diff_robot Robot {
     mass 1
   }
   controller "point_follower"
+  linearVelocity 0.012460691550492455 -0.03800961938841799 -2.502247298126992e-13
+  angularVelocity -2.2689933262498867e-09 6.898082188827066e-09 -4.812516307712231e-09
 }
 Robot {
   children [
