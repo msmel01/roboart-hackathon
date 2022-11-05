@@ -8,16 +8,28 @@ import math
 ## ------------------------------------------------------------------------
 # Edit keyboard_follower function to control robot using your choice of keyboard keys 
 
+low_speed = 1.
+high_speed =  10.
+
 def keyboard_follower(key):
     # Assign different direction of motions with different key values.
 
     # key is an integer value
     # leftSpeed is a float
     # rightSpeed is a float
+    print(key)
+    
+    if key == ord('A'):
+        return low_speed, high_speed
+    if key == ord('W'):
+        return high_speed, high_speed
+    if key == ord('D'):
+        return high_speed, low_speed
+    if key == ord('S'):
+        return -high_speed, -high_speed
 
-
-    leftSpeed = 1.0
-    rightSpeed = 1.0
+    leftSpeed = 0.0
+    rightSpeed = 0.0
     # Sample velocities provided to make robot move straight. 
     return leftSpeed,rightSpeed
 
@@ -91,8 +103,8 @@ if __name__=="__main__":
 
         # x,y,theta
         current = [gps.getValues()[0],gps.getValues()[1],imu.getRollPitchYaw()[2]]    
-        print("current x, y, theta of robot: ",current)
-        goal = [0,0,0] # initial goal to initialize goal array
+        # print("current x, y, theta of robot: ",current)
+        # goal = [0,0,0] # initial goal to initialize goal array
 
         ## ------------------------------------------------------------------------
         #Edit here to control using Keyboard
@@ -100,7 +112,7 @@ if __name__=="__main__":
         # keyboard_follower should return leftSpeed and rightSpeed 
         key=keyboard.getKey() # getting currently pressed key on the keyboard.
         #print("Key pressed: ", key)
-        leftSpeed,rightSpeed = keyboard_follower(key)
+        leftSpeed, rightSpeed = keyboard_follower(key)
         ## ------------------------------------------------------------------------
 
         # Setting velocities to each wheel based on calculation.

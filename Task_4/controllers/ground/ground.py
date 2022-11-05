@@ -26,7 +26,7 @@ height = display.getHeight()
 
 # Get access to robot handle to access its tree.
 mybot = super.getFromDef("diff_robot")
-
+# mybot2 = super
 # Get translation field to now robot's current location. 
 translationField = mybot.getField("translation")
 
@@ -35,7 +35,8 @@ background = display.imageLoad("../../worlds/textures/black.png")
 display.imagePaste( background, 0, 0) # Adding background to the display node to make changes on the background.
 
 # // set the pen to remove the texture
-display.setAlpha( 0.0)
+display.setAlpha(1.0)
+display.setColor(16711680)
 
 draw = True # Flag to enable and disable drawing.
 
@@ -57,6 +58,6 @@ while super.step(TIME_STEP) != -1:
     y = int(width * (translation[0] + GROUND_Y / 2) / GROUND_Y) # Mapping robot translation in y axis to pixel value
     
     # Remove 10 x 10 pixel at location x,y in the display image plane to see the base "Women in AI and Robotics" logo.
-    display.fillOval( x, y, 5, 5)
+    display.fillOval( x, y, 10, 10)
 
   pass
