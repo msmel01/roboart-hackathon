@@ -20,9 +20,43 @@ def point_follower(current,goal):
     # rightSpeed is a float
 
     # Controller code here to reach from "current" location to "goal" location. 
-
-    leftSpeed = 1.0 
-    rightSpeed = 1.0
+    
+    # Testing
+    #print("diff x 0: ", abs(current[0] - (goal[0])[0]))
+    #print("diff y 0: ", abs(current[1] - (goal[0])[1]))
+    #print("diff theta 0: ", abs(current[2] - (goal[0])[2]))
+    
+    #print("diff x 1: ", abs(current[0] - (goal[1])[0]))
+    #print("diff y 1: ", abs(current[1] - (goal[1])[1]))
+    #print("diff theta 1: ", abs(current[2] - (goal[1])[2]))
+    
+    #print("diff x 2: ", abs(current[0] - (goal[2])[0]))
+    #print("diff y 2: ", abs(current[1] - (goal[2])[1]))
+    #print("diff theta 2: ", abs(current[2] - (goal[2])[2]))
+    
+    #print("diff x 3: ", abs(current[0] - (goal[3])[0]))
+    #print("diff y 3: ", abs(current[1] - (goal[3])[1]))
+    #print("diff theta 3: ", abs(current[2] - (goal[3])[2]))
+    if  abs(current[1] - (goal[0])[1]) < 0.1 and abs(current[0] - (goal[0])[0]) < 0.1 and abs(current[2] - (goal[0])[2]) > 0.05:
+        print("up")
+        leftSpeed = -5.0 
+        rightSpeed = 5.0
+    elif abs(current[0] - (goal[1])[0]) < 0.1 and abs(current[1] - (goal[1])[1]) < 0.1 and abs(current[2] - (goal[1])[2]) > 0.05:
+        print("left")
+        leftSpeed = -5.0 
+        rightSpeed = 5.0
+    elif abs(current[1] - (goal[2])[1]) < 0.2 and abs(current[0] - (goal[2])[0]) < 0.1 and abs(current[2] - (goal[2])[2]) > 0.05:
+        print("down")
+        leftSpeed = -5.0 
+        rightSpeed = 5.0
+    elif abs(current[0] - (goal[3])[0]) < 0.2 and abs(current[1] - (goal[3])[1]) < 0.2 and abs(current[2] - (goal[3])[2]) > 0.05:
+        print("right")
+        leftSpeed = 0
+        rightSpeed = 0  
+    else:
+        leftSpeed = 4.8 
+        rightSpeed = 4.8
+    
     # Sample velocities of 1.0 provided to make robot move straight by default. 
     return leftSpeed,rightSpeed
 
@@ -37,7 +71,11 @@ def Sketch():
     # then to add [1,2,1.57] as goal
     # goal.append([1,2,1.57])
     # To access 1st goal : goal[0], 2nd goal : goal[1] and so on..
-    goal = [0,0,0] # [x,y,theta]
+    goal = [] # [x,y,theta]
+    goal.append([4, -4, 1.57])
+    goal.append([4, 4, 3.14])
+    goal.append([-4, 4, -1.57])
+    goal.append([-4, -4, 0])
     return goal
 
 ## ------------------------------------------------------------------------
@@ -47,14 +85,11 @@ robot = Robot()
 timestep = int(robot.getBasicTimeStep()) # Defined timestep (in msec) to enable sensors and define sensor frequency.
 
 # Initialize and Enable GPS object to get X,Y location of robot
-# gps = robot.getGPS("gps")
-gps = robot.getDevice("gps")
+gps = robot.getGPS("gps")
 gps.enable(timestep) # x, y, z location received at time difference equat to timestep.
 
 # Initialize and Enable IMU object to get theta (orientation) of robot
-# imu = robot.getInertialUnit("imu")
-imu = robot.getDevice("imu")
-
+imu = robot.getInertialUnit("imu")
 imu.enable(timestep) # Theta recieved at time difference equat to timestep.
 
 
@@ -62,8 +97,7 @@ imu.enable(timestep) # Theta recieved at time difference equat to timestep.
 wheels_names = ["wheel1", "wheel2", "wheel3", "wheel4"]
 wheels = []
 for i in range(4):
-    wheels.append(robot.getDevice(wheels_names[i]))
-    # wheels.append(robot.getMotor(wheels_names[i]))
+    wheels.append(robot.getMotor(wheels_names[i]))
     wheels[-1].setPosition(float('inf')) # setting max position limit of each wheel to infinity to convert it to velocity mode 
     wheels[-1].setVelocity(0.0) # Setting zero velocity for all the wheels.
 
@@ -80,7 +114,7 @@ if __name__=="__main__":
         print("current x, y, theta of robot: ",current)
         
         #comment this default goal location if you caculate your own set of goals vector 
-        goal = [0,0,0] # initial goal to initialize goal array
+        goal = Sketch() # initial goal to initialize goal array
 
         ## ------------------------------------------------------------------------------
         #Edit here 
